@@ -9,8 +9,16 @@ import SwiftUI
 
 struct AddView: View {
     
+    // @Environment property wrapper is a collection of key-value pairs that SwitUI uses to store and propagate various information across views. It takes a key path of an EnvironmentValues structure as an argument, and returns the corresponding value.
+    
+    // @EnvironmentObject allows data to be shared across multiple views. It simplify the process of passing data through different levels of view hierarchy, making code cleaner and more efficient.
+    
+    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var listViewModle: ListViewModel
     @State var textFieldText: String = ""
+    
+    @State var alertTitle: String = ""
+    @State var showAlert: Bool = false
     
     var body: some View {
         ScrollView {
@@ -33,10 +41,29 @@ struct AddView: View {
             .padding(14)
         }
         .navigationTitle("Add an Item 🖌")
+        .alert(isPresented: $showAlert, content: getAlert)
     }
     
     func saveButtonPressed() {
-        listViewModle.addItem(title: textFieldText)
+        if textIsAppropriate() {
+            listViewModle.addItem(title: textFieldText)
+            // Page turns to ListView when saveButtonPressed
+            presentationMode.wrappedValue.dismiss()
+        }
+    }
+    // ctr + cmd + space shows imoji panel
+    func textIsAppropriate() -> Bool {
+        if textFieldText.count < 1 {
+            alertTitle = "Your new todo item must be at least 1 character long.  😱🤯🥶"
+            showAlert.toggle()
+            
+            return false
+        }
+        return true
+    }
+    
+    func getAlert() -> Alert {
+        return Alert(title: Text(alertTitle))
     }
 }
 
