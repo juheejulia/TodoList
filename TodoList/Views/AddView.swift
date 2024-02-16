@@ -5,6 +5,12 @@
 //  Created by Juhee Kang Johansson on 2024-02-02.
 //
 
+/*
+ Model - data point
+ View - UI
+ ViewModel - manages Models for View
+ */
+
 import SwiftUI
 
 struct AddView: View {
@@ -14,7 +20,7 @@ struct AddView: View {
     // @EnvironmentObject allows data to be shared across multiple views. It simplify the process of passing data through different levels of view hierarchy, making code cleaner and more efficient.
     
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var listViewModle: ListViewModel
+    @EnvironmentObject var listViewModel: ListViewModel
     @State var textFieldText: String = ""
     
     @State var alertTitle: String = ""
@@ -46,7 +52,7 @@ struct AddView: View {
     
     func saveButtonPressed() {
         if textIsAppropriate() {
-            listViewModle.addItem(title: textFieldText)
+            listViewModel.addItem(title: textFieldText)
             // Page turns to ListView when saveButtonPressed
             presentationMode.wrappedValue.dismiss()
         }

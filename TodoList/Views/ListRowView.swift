@@ -5,6 +5,12 @@
 //  Created by Juhee Kang Johansson on 2024-02-02.
 //
 
+/*
+ Model - data point
+ View - UI
+ ViewModel - manages Models for View
+ */
+
 import SwiftUI
 
 struct ListRowView: View {
@@ -26,7 +32,7 @@ struct ListRowView: View {
 struct ListRowView_Previews: PreviewProvider {
     
     static var item1 = ItemModel(title:"First item!", isCompleted: false)
-    static var item2 = ItemModel(title:"Second item!", isCompleted: true)
+    static var item2 = ItemModel(title:"Second item!", isCompleted: false)
     
     static var previews: some View {
         Group {

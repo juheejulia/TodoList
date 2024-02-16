@@ -1,10 +1,3 @@
-//
-//  ListViewModel.swift
-//  TodoList
-//
-//  Created by Juhee Kang Johansson on 2024-02-10.
-//
-
 /*
  Model - data point
  View - UI
@@ -27,7 +20,12 @@ import Foundation
 class ListViewModel: ObservableObject {
     
     //@Published is a property wrapper that allows you to mark a property of a class as observable, meaning that any changes to its value will trigger an update in the views tat depend on it.
-    @Published var items: [ItemModel] = []
+    @Published var items: [ItemModel] = [] {
+        didSet {
+            saveItems()
+        }
+    }
+    let itemsKey: String = "items_list"
     
     // init() Creates an instance of the app using the body that you define for its content.
     init() {
@@ -35,12 +33,13 @@ class ListViewModel: ObservableObject {
     }
     
     func getItem() {
-        let newItems = [
-            ItemModel(title: "This is the first title!", isCompleted: false),
-            ItemModel(title: "This is the second title!", isCompleted: false),
-            ItemModel(title: "This is the third title!", isCompleted: false),
-        ]
-        items.append(contentsOf: newItems)
+        guard
+            let data = UserDefaults.standard.data(forKey: itemsKey),
+            let savedItems = try? JSONDecoder().decode([ItemModel].self, from: data)
+        else { return }
+        
+        self.items = savedItems
+        
     }
     
     func deleteItem(indexSet: IndexSet) {
@@ -66,6 +65,12 @@ class ListViewModel: ObservableObject {
         
         if let index = items.firstIndex(where: {$0.id == item.id}) {
             items[index] = item.updateCompletion()
+        }
+    }
+    
+    func saveItems() {
+        if let encodedData = try? JSONEncoder().encode(items) {
+            UserDefaults.standard.set(encodedData, forKey: itemsKey)
         }
     }
 }
